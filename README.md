@@ -3,28 +3,48 @@
 Zaawansowany system do analizy sieci **WiFi, Bluetooth, GSM** na ESP32. Umożliwia **skanowanie, analizę i wizualizację** wyników na wyświetlaczu OLED oraz interakcję poprzez menu.
 
 ## **Funkcjonalności**
-- **Skanowanie sieci WiFi** – identyfikacja dostępnych sieci, siła sygnału, zabezpieczenia  
-- **Analiza GSM (SIM800L)** – sprawdzanie BTS, poziomu sygnału, dostępnych operatorów  
-- **Bluetooth Scanner** – skanowanie urządzeń BLE i BR/EDR, lista i szczegóły usług  
-- **Obsługa menu OLED** – nawigacja po wynikach skanowania i szczegółowe widoki  
+- **Skanowanie sieci WiFi** – identyfikacja dostępnych sieci, siła sygnału, zabezpieczenia. System pobiera listę dostępnych sieci WiFi i wyświetla je w menu OLED, umożliwiając użytkownikowi wybór oraz podgląd szczegółów, takich jak siła sygnału, typ zabezpieczeń i kanał.
+- **Analiza GSM (SIM800L)** – system nawiązuje komunikację z modułem SIM800L i odczytuje informacje o dostępnych stacjach BTS, sile sygnału oraz operatorze. Użytkownik może przejrzeć dostępne sieci oraz sprawdzić parametry połączenia komórkowego.
+- **Bluetooth Scanner** – skanowanie urządzeń BLE i BR/EDR. Użytkownik może przeglądać listę znalezionych urządzeń, sprawdzać ich adresy MAC, nazwy oraz dostępne usługi.
+- **Obsługa menu OLED** – interaktywne menu pozwala na łatwe przełączanie się pomiędzy poszczególnymi funkcjami systemu. Wyniki są prezentowane w sposób czytelny, a dłuższe nazwy są przewijane automatycznie.
 
 ## **Sprzęt użyty w projekcie**
-- **ESP32** – główny kontroler  
-- **SIM800L** – moduł GSM  
-- **OLED 128x64** – interfejs użytkownika  
+- **ESP32** – główny kontroler zarządzający wszystkimi modułami.
+- **SIM800L** – moduł GSM, odpowiedzialny za analizę sieci komórkowych.
+- **OLED 128x64** – wyświetlacz prezentujący wyniki skanowania oraz nawigację w menu.
+
+## **Protokoły używane w projekcie**
+- **WiFi (802.11 b/g/n)** – do skanowania dostępnych sieci oraz ich parametrów.
+- **Bluetooth (BLE, BR/EDR)** – do wykrywania i analizy urządzeń Bluetooth.
+- **GSM/AT Commands** – do komunikacji z modułem SIM800L i analizy sygnału sieci komórkowej.
+- **I2C** – do komunikacji z wyświetlaczem OLED.
+- **UART** – do sterowania modułem SIM800L i odbierania wyników analizy.
+
+## **Opis działania**
+1. **Interfejs użytkownika** – system uruchamia ekran startowy, po czym przechodzi do menu głównego.
+2. **Skanowanie sieci** – użytkownik może wybrać tryb skanowania (WiFi, Bluetooth, GSM). System wykonuje zapytania do odpowiednich modułów, zbiera dane i wyświetla je na OLED.
+3. **Przeglądanie wyników** – po zakończeniu skanowania użytkownik może przejrzeć listę wyników i uzyskać szczegółowe informacje na temat wybranej sieci lub urządzenia.
+4. **Opcje dodatkowe** – system umożliwia testowanie połączenia GSM, przeglądanie operatorów i siły sygnału.
 
 ## **Jak uruchomić?**
 ### **1. Klonuj repozytorium**
 ```bash
-git clone https://github.com/twoj-user/twoje-repo.git
-cd twoje-repo
+git clone https://github.com/GrzegorzK121/GK-ESP32-Multi-Network-Analyzer.git
+cd GK-ESP32-Multi-Network-Analyzer
 ```
-### **2. Skonfiguruj i wgraj na ESP32**
-Użyj **PlatformIO** lub **ESP-IDF** do skompilowania projektu.  
+### **2. Wyczyść poprzednią kompilację**
 ```bash
-idf.py build flash monitor
+idf.py clean
 ```
-### **3. Korzystaj z menu OLED**
+### **3. Skonfiguruj i zbuduj projekt**
+```bash
+idf.py build
+```
+### **4. Wgraj na ESP32**
+```bash
+idf.py flash monitor
+```
+### **5. Korzystaj z menu OLED**
 Po uruchomieniu ESP32 wyświetlacz OLED umożliwia interakcję z systemem. Możesz przeglądać dostępne sieci, analizować sygnały i poruszać się po menu.
 
 ## **Licencja**
