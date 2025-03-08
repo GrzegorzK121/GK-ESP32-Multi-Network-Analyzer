@@ -1,0 +1,179 @@
+#include "esp_wifi.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+#include "GK_OLED_TEXT.h"
+#include <string.h>
+
+#define TAG "GK_WIFI"
+
+#define BUTTON_BACK_GPIO 23
+#define BUTTON_UP_GPIO 18
+#define BUTTON_DOWN_GPIO 19
+#define BUTTON_SELECT_GPIO 5
+
+#define MAX_NETWORKS 20
+
+typedef struct {
+    char ssid[33];  // Nazwa sieci (SSID)
+    int rssi;       // Si³a sygna³u
+    int channel;    // Kana³
+    char mac[18];   // Adres MAC
+    int authmode;   // Tryb zabezpieczeñ
+} WiFiNetwork;
+
+// Statyczna tablica przechowuj¹ca dane o sieciach
+static WiFiNetwork wifi_networks[MAX_NETWORKS];
+static int network_count = 0;
+
+// Funkcja do czyszczenia tablicy sieci
+void clear_networks(void) {
+    memset(wifi_networks, 0, sizeof(wifi_networks));
+    network_count = 0;
+}
+
+// Funkcja inicjalizuj¹ca Wi-Fi i wykonuj¹ca skanowanie
+void wifi_scan_start(void) {
+    ESP_LOGI(TAG, "Rozpoczêcie skanowania WiFi");
+
+    // Inicjalizacja NVS
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
+    // Konfiguracja Wi-Fi
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_start());
+
+    // Konfiguracja skanowania
+    wifi_scan_config_t scan_config = {
+        .ssid = NULL,
+        .bssid = NULL,
+        .channel = 0,
+        .show_hidden = true,
+        .scan_type = WIFI_SCAN_TYPE_PASSIVE,
+        .scan_time = {
+            .passive = 300,
+        },
+    };
+
+    // Rozpocznij skanowanie
+    ESP_ERROR_CHECK(esp_wifi_scan_start(&scan_config, false));
+    ESP_LOGI(TAG, "Skanowanie Wi-Fi rozpoczête");
+
+    // Poczekaj na zakoñczenie skanowania
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+    // Pobierz wyniki skanowania
+    uint16_t ap_count = 0;
+    ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
+    ap_count = (ap_count > MAX_NETWORKS) ? MAX_NETWORKS : ap_count;
+
+    wifi_ap_record_t ap_records[MAX_NETWORKS];
+    ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&ap_count, ap_records));
+
+    // Zapisz wyniki w tablicy
+    for (int i = 0; i < ap_count; i++) {
+        strncpy(wifi_networks[i].ssid, (char *)ap_records[i].ssid, sizeof(wifi_networks[i].ssid) - 1);
+        wifi_networks[i].ssid[sizeof(wifi_networks[i].ssid) - 1] = '\0';
+        wifi_networks[i].rssi = ap_records[i].rssi;
+        wifi_networks[i].channel = ap_records[i].primary;
+        snprintf(wifi_networks[i].mac, sizeof(wifi_networks[i].mac), "%02X:%02X:%02X:%02X:%02X:%02X",
+                 ap_records[i].bssid[0], ap_records[i].bssid[1], ap_records[i].bssid[2],
+                 ap_records[i].bssid[3], ap_records[i].bssid[4], ap_records[i].bssid[5]);
+        wifi_networks[i].authmode = ap_records[i].authmode;
+    }
+    network_count = ap_count;
+
+    ESP_LOGI(TAG, "Skanowanie zakoñczone, znaleziono %d sieci", network_count);
+}
+
+// Funkcja obs³uguj¹ca ekran szczegó³ów sieci
+void gk_wifi_display_details(int selected_index) {
+    char buffer[32];
+
+    snprintf(buffer, sizeof(buffer), "Siec: %.25s", wifi_networks[selected_index].ssid);
+    gk_oled_display(buffer, 0);
+
+    snprintf(buffer, sizeof(buffer), "MAC: %s", wifi_networks[selected_index].mac);
+    gk_oled_display(buffer, 1);
+
+    snprintf(buffer, sizeof(buffer), "Kanal: %d", wifi_networks[selected_index].channel);
+    gk_oled_display(buffer, 2);
+
+    const char *auth_mode = (wifi_networks[selected_index].authmode == WIFI_AUTH_OPEN) ? "Brak"
+                          : (wifi_networks[selected_index].authmode == WIFI_AUTH_WEP) ? "WEP"
+                          : (wifi_networks[selected_index].authmode == WIFI_AUTH_WPA_PSK) ? "WPA-PSK"
+                          : (wifi_networks[selected_index].authmode == WIFI_AUTH_WPA2_PSK) ? "WPA2-PSK"
+                          : "Inne";
+    snprintf(buffer, sizeof(buffer), "Zabez.: %s", auth_mode);
+    gk_oled_display(buffer, 3);
+
+    while (gpio_get_level(BUTTON_BACK_GPIO) != 0) {
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+}
+
+// G³ówna funkcja obs³uguj¹ca ekran Wi-Fi
+void gk_wifi_screen(void) {
+    gpio_set_direction(BUTTON_BACK_GPIO, GPIO_MODE_INPUT);
+    gpio_pullup_en(BUTTON_BACK_GPIO);
+    gpio_set_direction(BUTTON_UP_GPIO, GPIO_MODE_INPUT);
+    gpio_pullup_en(BUTTON_UP_GPIO);
+    gpio_set_direction(BUTTON_DOWN_GPIO, GPIO_MODE_INPUT);
+    gpio_pullup_en(BUTTON_DOWN_GPIO);
+    gpio_set_direction(BUTTON_SELECT_GPIO, GPIO_MODE_INPUT);
+    gpio_pullup_en(BUTTON_SELECT_GPIO);
+
+    clear_networks();
+    wifi_scan_start();
+
+    int current_option = 0;
+
+    while (true) {
+        // Wyœwietl listê sieci
+        gk_oled_display("Sieci WiFi:", 0);
+        for (int i = 0; i < 3; i++) {
+            int index = current_option + i;
+            if (index < network_count) {
+                char buffer[24];
+                snprintf(buffer, sizeof(buffer), "%s%-10.10s %4d dBm",
+                         (index == current_option) ? "> " : "  ",
+                         wifi_networks[index].ssid,
+                         wifi_networks[index].rssi);
+                gk_oled_display(buffer, i + 1);
+            } else {
+                gk_oled_display("", i + 1);
+            }
+        }
+
+        // Obs³uga przycisków
+        if (gpio_get_level(BUTTON_DOWN_GPIO) == 0) {
+            current_option = (current_option + 1) % network_count;
+            vTaskDelay(200 / portTICK_PERIOD_MS);
+        }
+
+        if (gpio_get_level(BUTTON_UP_GPIO) == 0) {
+            current_option = (current_option - 1 + network_count) % network_count;
+            vTaskDelay(200 / portTICK_PERIOD_MS);
+        }
+
+        if (gpio_get_level(BUTTON_SELECT_GPIO) == 0) {
+            gk_wifi_display_details(current_option);
+        }
+
+        if (gpio_get_level(BUTTON_BACK_GPIO) == 0) {
+            clear_networks();
+            break;
+        }
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+}
