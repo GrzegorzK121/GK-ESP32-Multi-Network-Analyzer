@@ -15,6 +15,7 @@ Zaawansowany system do analizy sieci **WiFi, Bluetooth, GSM** na ESP32. Umożliw
 ![obraz](https://github.com/user-attachments/assets/923cb680-407f-42a7-97b5-48644e4b79eb)
 
 **Reszta zdjęć i opisów w dokumentacji**
+[GK ESP32 Multi-Network Analyzer.docx](https://github.com/user-attachments/files/19144575/GK.ESP32.Multi-Network.Analyzer.docx)
 
 ## **Funkcjonalności**
 - **Skanowanie sieci WiFi** – identyfikacja dostępnych sieci, siła sygnału, zabezpieczenia. System pobiera listę dostępnych sieci WiFi i wyświetla je w menu OLED, umożliwiając użytkownikowi wybór oraz podgląd szczegółów, takich jak siła sygnału, typ zabezpieczeń i kanał.
