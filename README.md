@@ -3,16 +3,18 @@
 Advanced system for analyzing WiFi, Bluetooth, and GSM networks using ESP32. Enables scanning, analysis, and visualization of results on an OLED display, with interactive menu navigation.
 
 ## Project Diagram
-See: [Project Diagram Image]
+![obraz](https://github.com/user-attachments/assets/6a1e1604-939d-4b4d-9028-4809d771e0d7)
 
 ## Simple Documentation
-See: [Simple Documentation Image]
+[GK ESP32 Multi-Network Analyzer.docx](https://github.com/user-attachments/files/19145320/GK.ESP32.Multi-Network.Analyzer.docx)
+
 
 ## Menu Screenshot
-See: [Menu Screenshot Image]
+![obraz](https://github.com/user-attachments/assets/dc4ec182-7424-4fa1-888b-b41c57cbeb4f)
 
 ## Example Feature Screenshot - WiFi Network Details
-See: [WiFi Network Details Screenshot Image]
+![obraz](https://github.com/user-attachments/assets/b243ca05-ca48-4dc9-9f2c-0c8a21b75894)
+
 
 Additional images and descriptions available in the documentation:
 GK ESP32 Multi-Network Analyzer.docx
