@@ -1,70 +1,70 @@
-# **GK ESP32 Multi-Network Analyzer**
+# GK ESP32 Multi-Network Analyzer
 
-Zaawansowany system do analizy sieci **WiFi, Bluetooth, GSM** na ESP32. Umożliwia **skanowanie, analizę i wizualizację** wyników na wyświetlaczu OLED oraz interakcję poprzez menu.
+Advanced system for analyzing WiFi, Bluetooth, and GSM networks using ESP32. Enables scanning, analysis, and visualization of results on an OLED display, with interactive menu navigation.
 
-## **Schemat projektu**
-![obraz](https://github.com/user-attachments/assets/0481ad97-a6c6-403d-b4a4-c44463156d97)
+## Project Diagram
+See: [Project Diagram Image]
 
-## **Prosta dokumentacja**
-![obraz](https://github.com/user-attachments/assets/210eeadd-8400-4fd6-be7f-457120a29374)
+## Simple Documentation
+See: [Simple Documentation Image]
 
-## **Zdjęcie Menu**
-![obraz](https://github.com/user-attachments/assets/9a5aa7e9-0114-4ac9-b0bb-d30b6867dba4)
+## Menu Screenshot
+See: [Menu Screenshot Image]
 
-## **Zdjęcie przykładowej funkcji - szczegółów sieci wifi**
-![obraz](https://github.com/user-attachments/assets/923cb680-407f-42a7-97b5-48644e4b79eb)
+## Example Feature Screenshot - WiFi Network Details
+See: [WiFi Network Details Screenshot Image]
 
-**Reszta zdjęć i opisów w dokumentacji**
-[GK ESP32 Multi-Network Analyzer.docx](https://github.com/user-attachments/files/19144575/GK.ESP32.Multi-Network.Analyzer.docx)
+Additional images and descriptions available in the documentation:
+GK ESP32 Multi-Network Analyzer.docx
 
-## **Funkcjonalności**
-- **Skanowanie sieci WiFi** – identyfikacja dostępnych sieci, siła sygnału, zabezpieczenia. System pobiera listę dostępnych sieci WiFi i wyświetla je w menu OLED, umożliwiając użytkownikowi wybór oraz podgląd szczegółów, takich jak siła sygnału, typ zabezpieczeń i kanał.
-- **Analiza GSM (SIM800L)** – system nawiązuje komunikację z modułem SIM800L i odczytuje informacje o dostępnych stacjach BTS, sile sygnału oraz operatorze. Użytkownik może przejrzeć dostępne sieci oraz sprawdzić parametry połączenia komórkowego.
-- **Bluetooth Scanner** – skanowanie urządzeń BLE i BR/EDR. Użytkownik może przeglądać listę znalezionych urządzeń, sprawdzać ich adresy MAC, nazwy oraz dostępne usługi.
-- **Obsługa menu OLED** – interaktywne menu pozwala na łatwe przełączanie się pomiędzy poszczególnymi funkcjami systemu. Wyniki są prezentowane w sposób czytelny, a dłuższe nazwy są przewijane automatycznie.
+## Functionalities
+- **WiFi Network Scanning** – Identifies available networks, signal strength, and security. Networks are displayed on an OLED menu, allowing users to select and view details such as signal strength, security type, and channel.
+- **GSM Analysis (SIM800L)** – Communicates with SIM800L module, retrieving information on available BTS stations, signal strength, and operator. Users can browse cellular networks and verify connection parameters.
+- **Bluetooth Scanner** – Scans BLE and BR/EDR devices, allowing users to view MAC addresses, device names, and available services.
+- **OLED Menu Interface** – Interactive menu provides easy switching between system functionalities, clearly displaying results with automatic scrolling for longer names.
 
-## **Sprzęt użyty w projekcie**
-- **ESP32** – główny kontroler zarządzający wszystkimi modułami.
-- **SIM800L** – moduł GSM, odpowiedzialny za analizę sieci komórkowych.
-- **OLED 128x64** – wyświetlacz prezentujący wyniki skanowania oraz nawigację w menu.
+## Hardware Used
+- **ESP32** – Main controller managing modules.
+- **SIM800L** – GSM module for cellular network analysis.
+- **OLED 128x64** – Display for presenting scan results and navigating menus.
 
-## **Protokoły używane w projekcie**
-- **WiFi (802.11 b/g/n)** – do skanowania dostępnych sieci oraz ich parametrów.
-- **Bluetooth (BLE, BR/EDR)** – do wykrywania i analizy urządzeń Bluetooth.
-- **GSM/AT Commands** – do komunikacji z modułem SIM800L i analizy sygnału sieci komórkowej.
-- **I2C** – do komunikacji z wyświetlaczem OLED.
-- **UART** – do sterowania modułem SIM800L i odbierania wyników analizy.
+## Protocols Used
+- **WiFi (802.11 b/g/n)** – Network scanning.
+- **Bluetooth (BLE, BR/EDR)** – Bluetooth device detection.
+- **GSM/AT Commands** – Communication and network analysis via SIM800L.
+- **I2C** – Communication with OLED display.
+- **UART** – SIM800L control and data retrieval.
 
-## **Opis działania**
-1. **Interfejs użytkownika** – system uruchamia ekran startowy, po czym przechodzi do menu głównego.
-2. **Skanowanie sieci** – użytkownik może wybrać tryb skanowania (WiFi, Bluetooth, GSM). System wykonuje zapytania do odpowiednich modułów, zbiera dane i wyświetla je na OLED.
-3. **Przeglądanie wyników** – po zakończeniu skanowania użytkownik może przejrzeć listę wyników i uzyskać szczegółowe informacje na temat wybranej sieci lub urządzenia.
-4. **Opcje dodatkowe** – system umożliwia testowanie połączenia GSM, przeglądanie operatorów i siły sygnału.
+## Operation Description
+1. **User Interface** – System launches startup screen, then main menu.
+2. **Network Scanning** – User selects mode (WiFi, Bluetooth, GSM). System queries modules, collects data, and displays results.
+3. **Reviewing Results** – After scanning, users can review details of networks/devices.
+4. **Additional Options** – GSM connection testing, operator browsing, signal strength checking.
 
-## **Jak uruchomić?**
-### **1. Klonuj repozytorium**
-```bash
+## How to Run?
+### 1. Clone Repository
+```
 git clone https://github.com/GrzegorzK121/GK-ESP32-Multi-Network-Analyzer.git
 cd GK-ESP32-Multi-Network-Analyzer
 ```
-### **2. Wyczyść poprzednią kompilację**
-```bash
+### 2. Clean Previous Builds
+```
 idf.py clean
 ```
-### **3. Skonfiguruj i zbuduj projekt**
-```bash
+### 3. Configure and Build
+```
 idf.py build
 ```
-### **4. Wgraj na ESP32**
-```bash
+### 4. Flash to ESP32
+```
 idf.py flash monitor
 ```
-### **5. Korzystaj z menu OLED**
-Po uruchomieniu ESP32 wyświetlacz OLED umożliwia interakcję z systemem. Możesz przeglądać dostępne sieci, analizować sygnały i poruszać się po menu.
+### 5. Use OLED Menu
+After startup, use OLED display to browse networks, analyze signals, and navigate menus.
 
-## **Licencja**
-Projekt jest dostępny na licencji **MIT**, co oznacza, że możesz go dowolnie używać i modyfikować.
+## License
+This project is licensed under the MIT License.
 
-## **Współpraca**
-Jeśli masz pomysły na rozwój projektu, zapraszam do **forkowania i tworzenia pull requestów**.
+## Contribution
+Feel free to fork and submit pull requests for further development.
 
