@@ -1,5 +1,33 @@
 # GK ESP32 Multi-Network Analyzer
 
+# ESP32 Mobile Communication Terminal (GSM SIM800L, WiFi, Bluetooth, OLED GUI)
+
+This project was developed as part of R&D (Research and Development) activities focused on Embedded Systems, utilizing the **ESP32** microcontroller, programmed in **C** within the **Espressif IDE** environment. It features an intuitive graphical user interface displayed on an **OLED** (**I²C** communication), navigated through physical buttons.
+
+The terminal supports:
+- **GSM communication** (voice calls, SMS) via the **SIM800L** module (**2G GSM**) using AT commands over **UART**.
+- Comprehensive WiFi network scanning, providing detailed information including SSID, RSSI, communication channel, and security type.
+- Bluetooth device discovery and detailed analysis (device name, MAC address, device type, available services, RSSI signal strength).
+- Intuitive, dynamic OLED-based menu controlled through physical buttons.
+
+The solution is designed for clarity, usability, flexibility, and scalability. It can be employed as a mobile network diagnostic terminal, wireless network monitoring tool, or as a foundation for further R&D efforts in Embedded Systems and wireless communication technologies.
+
+## Features
+- Microcontroller: **ESP32**
+- Programming Language: **C**
+- Development Environment: **Espressif IDE**
+- GSM Module: **SIM800L** (**2G GSM**), communication via AT commands over **UART**
+- OLED Display: 128x64 pixels, interface **I²C**
+- Wireless communication: WiFi and Bluetooth scanning
+- Dynamic, user-friendly menu controlled via physical buttons
+
+### Hardware Requirements
+- ESP32 microcontroller
+- SIM800L GSM Module
+- 128x64 OLED display (**I²C** interface)
+- Physical control buttons (navigation)
+
+
 Advanced system for analyzing WiFi, Bluetooth, and GSM networks using ESP32. Enables scanning, analysis, and visualization of results on an OLED display, with interactive menu navigation.
 
 ## Project Diagram
