@@ -38,9 +38,11 @@ Advanced system for analyzing WiFi, Bluetooth, and GSM networks using ESP32. Ena
 
 
 ## Menu Screenshot
-![obraz](https://github.com/user-attachments/assets/dc4ec182-7424-4fa1-888b-b41c57cbeb4f)
+![obraz](https://github.com/user-attachments/assets/7ba922b0-515c-455d-9a58-6c1372cd2fcf)
+
 
 ## Example Feature Screenshot - WiFi Network Details
+![obraz](https://github.com/user-attachments/assets/dc4ec182-7424-4fa1-888b-b41c57cbeb4f)
 ![obraz](https://github.com/user-attachments/assets/b243ca05-ca48-4dc9-9f2c-0c8a21b75894)
 
 
