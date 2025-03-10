@@ -14,7 +14,7 @@ The solution is designed for clarity, usability, flexibility, and scalability. I
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/c6e677b4-092f-414b-be70-36e7a62323e5" width="30%" style="margin-right: 10px;">
-  <img src="https://github.com/user-attachments/assets/0dcbcfb1-3888-4075-94ec-4da01a69b866" width="30%">
+  <img src="https://github.com/user-attachments/assets/0dcbcfb1-3888-4075-94ec-4da01a69b866" width="50%">
 </p>
 
 
